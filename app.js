@@ -1,5 +1,8 @@
 //Togloomiin buh gazart ashiglah global huvisagch
 
+//toloom duussan esegiig hadgalah toloviin huvisagch
+var isNewGame;
+
 //ali togloch shoo shidev ve
 var activePlayer;
 
@@ -17,6 +20,8 @@ initGame();
 
 // tohloom ehlehed beldeh
 function initGame(){
+    //togloom ehelelee gedet tolov oruulah
+    isNewGame= true;
             //Toglogchiin eeljiig hadgalah huvisagch, Negduuger togloch 0, hoerdugaar toglogch 1
         activePlayer=0;
 
@@ -50,43 +55,54 @@ function initGame(){
 
       //Shoog shidev event listner 
 document.querySelector('.btn-roll').addEventListener('click', function () {
-    //1-6 dotors sanamsargui neg too gargaj avna
-    var diceNumber =Math.floor(Math.random()*6)+1;
+   if(isNewGame === true) {
+        //1-6 dotors sanamsargui neg too gargaj avna
+        var diceNumber =Math.floor(Math.random()*6)+1;
      
-    //shoonii zurgiig web deer gargaj irbe
-    diceDom.style.display="block";
+        //shoonii zurgiig web deer gargaj irbe
+        diceDom.style.display="block";
+        
+        //buusan sanamsargui toond hargalzah shoonii zurgiig web deer gargaj irne.
+        diceDom.src ='dice-'+ diceNumber+'.png';
     
-    //buusan sanamsargui toond hargalzah shoonii zurgiig web deer gargaj irne.
-    diceDom.src ='dice-'+ diceNumber+'.png';
-
-    //Buusan too 1 ees ylgaatai bol idevhtei Toglogchiin eeljiin onoog nemegduulne
-    if(diceNumber !==1){
-       // 1-ees zlgaatai too buulaa. buusan toog toglogchid nemj ogno.
-       roundScore = roundScore + diceNumber;
-       document.getElementById('current-'+ activePlayer).textContent = roundScore;
-    }else{
-        // 1 buusan tul toglogchiin eeljiig ene hesegt solij ogno
-        switchToNextPlayer();
-    }
+        //Buusan too 1 ees ylgaatai bol idevhtei Toglogchiin eeljiin onoog nemegduulne
+        if(diceNumber !==1){
+           // 1-ees zlgaatai too buulaa. buusan toog toglogchid nemj ogno.
+           roundScore = roundScore + diceNumber;
+           document.getElementById('current-'+ activePlayer).textContent = roundScore;
+        }else{
+            // 1 buusan tul toglogchiin eeljiig ene hesegt solij ogno
+            switchToNextPlayer();
+        }
+   }else{
+     alert("Game over");
+   }
 });
 
 // HOLD tovhcnooo event list ner
 document.querySelector(".btn-hold").addEventListener("click", function(){
-    //ug toglogchiiin tsugluulsan eeljiin onoog global onoon deer nemj ogno.
-    scores[activePlayer]= scores[activePlayer]+ roundScore;
+   if(isNewGame){
+     //ug toglogchiiin tsugluulsan eeljiin onoog global onoon deer nemj ogno.
+     scores[activePlayer]= scores[activePlayer]+ roundScore;
    
-       //delgets deer onoog oorchloh
-       document.getElementById("score-"+ activePlayer).textContent= scores[activePlayer];
+     //delgets deer onoog oorchloh
+     document.getElementById("score-"+ activePlayer).textContent= scores[activePlayer];
 
-    // Yg toglogch hojson esegiig shalgah
-    if(scores[activePlayer] >= 10){
-        //Ylagch gesen testiig gargah
-        document.getElementById("name-"+ activePlayer).textContent = "WINNER!!!";
-        document.querySelector('.player-' + activePlayer + '-panel').classList.add("winner");
-        document.querySelector('.player-' + activePlayer + '-panel').classList.remove("active");
-    }else{
-        switchToNextPlayer();
-    }   
+  // Yg toglogch hojson esegiig shalgah
+  if(scores[activePlayer] >= 10){
+      //Toglogchiiin duussan tolovt oruulah
+      isNewGame =false;
+      //Ylagch gesen testiig gargah
+      document.getElementById("name-"+ activePlayer).textContent = "WINNER!!!";
+      document.querySelector('.player-' + activePlayer + '-panel').classList.add("winner");
+      document.querySelector('.player-' + activePlayer + '-panel').classList.remove("active");
+  }else{
+      switchToNextPlayer();
+  }  
+   } else{
+    alert("Game over");
+
+   }
 })
 
 function switchToNextPlayer() {
@@ -103,7 +119,7 @@ function switchToNextPlayer() {
     //     activePlayer =1;
     // }else{
     //     activePlayer =0;
-    // }
+    // }  
 
     //Ulaan tsegiig shiljuuleh
     document.querySelector('.player-0-panel').classList.toggle("active");
